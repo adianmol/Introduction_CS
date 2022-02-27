@@ -1,0 +1,74 @@
+//Java 
+import java.util.Scanner;
+
+public class Quiz_1_Q1_Practice_3 {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);    
+    System.out.print("Enter a- ");
+		
+		int a = input.nextInt();
+		System.out.print("Enter b- ");
+		int b = input.nextInt();
+		while (true) {
+			if (b==0) {
+				System.out.print("Enter b- ");
+				 b = input.nextInt();
+			}
+			else {
+				break;
+			}
+		}
+		
+		System.out.print("Addition  of "+ a+" & "+ b + " is ");
+		int add = add(a,b);
+		System.out.println( add);
+		
+		System.out.print("Subtraction of "+ a+ " & "+ b+ " is ");
+		int sub = subtract(a,b);
+		System.out.println( sub);
+		
+		System.out.print("Multiplication of "+ a+ " & "+ b+ " is ");
+		int mul = multiply(a,b);
+		System.out.println( mul);
+		
+		System.out.print("Division of "+ a+ " & "+ b+" is ");
+		double div = divide(a,b);
+		System.out.println( div);
+		
+		System.out.print("Remainder of "+ a+ " & "+ b+ " is ");
+		int rem = remainder(a,b);
+		System.out.println( rem);
+    
+    //Methods:
+    //add
+	public static int add(int a, int b) {
+		int result;
+		result = (a + b);
+		return result; 
+	}
+	//subtract
+	public static int subtract(int a, int b) {
+		int result;
+		result = (a - b);
+		return result; 
+	}
+	//multiply
+	public static int multiply(int a, int b) {
+		int result;
+		result = (a * b);
+		return result; 
+	}
+	//divide
+	public static double divide(int a, int b) {
+		double result;
+		result = (double)a / b;
+		return result; 
+	}
+	//remainder
+	public static int remainder(int a, int b) {
+		int result;
+		result = (a % b);
+		return result; 
+	}
+}//class
