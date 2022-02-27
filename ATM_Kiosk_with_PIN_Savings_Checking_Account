@@ -1,80 +1,17 @@
+//Java
 import java.util.Scanner;
-
-public class Kiosk_pin {
+public class ATM_Kiosk_pin_check_sav {
 
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
-		
-		
-		System.out.println("Positivity Check");
-		
-		//user input and positivity check
-		int num;
-		
-		while (true) {
-			System.out.println("Enter a positive integer");
-			num = input.nextInt();
-			if (num>=0) {
-				break;
-			}//if
-		
-		}//while
-		
-		int leading_digit_value = leadingdigit(num);
-		System.out.println("The leading digit value is "+leading_digit_value );
-		System.out.println("");
-		
-		System.out.println("Calculator");
-		System.out.print("Enter a- ");
-		
-		int a = input.nextInt();
-		System.out.print("Enter b- ");
-		int b = input.nextInt();
-		while (true) {
-			if (b==0) {
-				System.out.print("Enter b- ");
-				 b = input.nextInt();
-			}
-			else {
-				break;
-			}
-		}
-		
-		System.out.print("Addition  of "+ a+" & "+ b + " is ");
-		int add = add(a,b);
-		System.out.println( add);
-		
-		System.out.print("Subtraction of "+ a+ " & "+ b+ " is ");
-		int sub = subtract(a,b);
-		System.out.println( sub);
-		
-		System.out.print("Multiplication of "+ a+ " & "+ b+ " is ");
-		int mul = multiply(a,b);
-		System.out.println( mul);
-		
-		System.out.print("Division of "+ a+ " & "+ b+" is ");
-		double div = divide(a,b);
-		System.out.println( div);
-		
-		System.out.print("Remainder of "+ a+ " & "+ b+ " is ");
-		int rem = remainder(a,b);
-		System.out.println( rem);
-		
-		
-		System.out.println("");
-		
-		//KIOSK
-		System.out.println("Kiosk");
-		
-		//initial variable values as in the question
 		int pin = 1449;
-		
+		 
 		int i;
 		int accountaccess =0;
-		int option =0;
+		
 		// Opening interface
 				
-		System.out.println("Welcome to Adi's Bank");
+		System.out.println("Welcome to Citibank");
 				
 		//pin check limit 3 times
 		for (i=0 ; i<3; i++) {
@@ -94,9 +31,10 @@ public class Kiosk_pin {
 		if (accountaccess ==1) {
 			//choose type of account - saving or checking
 			
-			System.out.println("Enter account of choice: 1 or 2 ");
+			System.out.println("Enter account of choice: 1 or 2 or 3");
 			System.out.println("1. Checking Account");
 			System.out.println("2. Savings Account");
+			System.out.println("3. Credit Card Account");
 			int account_choice = input.nextInt();
 			
 			//initial values
@@ -112,13 +50,15 @@ public class Kiosk_pin {
 				System.out.println("Welcome to your Checking Account ");
 				
 				info();
+				System.out.print("Choose ");
 				int cb_option = input.nextInt();
 				
-				while(cb_option!=5) {
+				while(cb_option!=6) {
 					sub_options(cb_option, checking_balance);
-					
+					System.out.println("Choose action ");
 					cb_option = input.nextInt();
 				}//while checking options
+				System.out.println("Thank you for visiting!");
 				break;
 				
 				
@@ -128,6 +68,7 @@ public class Kiosk_pin {
 				 
 				
 				info();
+				System.out.print("Choose");
 				int sb_option = input.nextInt();
 				
 				
@@ -139,16 +80,19 @@ public class Kiosk_pin {
 				break;
 				
 				}// switch
+			
 		}//if
 		else {
 			System.out.println("You don't have access to this account");
 		}
-
+		
+		input.close();
 	}//main
+	
+	
+	//methods
+	
 
-	//Methods-----
-	
-	
 	// Presenting options
 	public static void info() {
 		System.out.println("Choose an Option ");
@@ -156,7 +100,8 @@ public class Kiosk_pin {
 		System.out.println("2. PIN Change ");
 		System.out.println("3. Deposit Money");
 		System.out.println("4. Withdraw Money");
-		System.out.println("5. Exit");
+		System.out.println("5. Transfer Money");
+		System.out.println("6. Exit");
 	}
 	
 	
@@ -167,31 +112,47 @@ public class Kiosk_pin {
 		
 		case 1:
 			System.out.println("You have "+ balance+ " dollars.");
-			inputmeth.close();
 			break;
 		case 2:
 			System.out.print("Enter new pin ");
 			int newpin= inputmeth.nextInt();
-			inputmeth.close();
+			
 			break;
 		case 3:
 			System.out.println("How much money do you want to deposit?");
 			double deposit_more = inputmeth.nextDouble();
 			balance += deposit_more;
-			inputmeth.close();
+			
 			break;
 		case 4: 
 			System.out.println("How much money do you want to withdraw?");
 			double withdraw = inputmeth.nextDouble();
 			balance -= withdraw;
-			inputmeth.close();
+			
 			break;
 		case 5:
+			System.out.print("How much do you want to transfer? ");
+			double transferamt= inputmeth.nextDouble();
+			
+			System.out.print("From where do you want to transfer? ");
+			String frm_where= inputmeth.next();
+			
+		
+			System.out.print("Where do you want to transfer? ");
+			String where= inputmeth.next();
+			
+			
+			
+		case 6:
 			System.out.println("Have a good day!");
-			inputmeth.close();
+			
 			break;
 		}//switch
 		
+		//submethods 
+		
+		
 	}// case 
+	
 	
 }//class
