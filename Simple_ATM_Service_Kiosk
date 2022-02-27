@@ -1,0 +1,102 @@
+import java.util.Scanner;
+public class Exercise1 {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		
+		//initializing the account details based on the given instructions 
+
+		double balance_check = 0.00;
+		
+				
+		//sub-features
+		//loop 
+		int feature_action;
+		do {
+			feature_action= feature_choice_meth( input);
+			switch(feature_action) {
+					
+			case 1:
+				//balance inquiry
+				balance_inquiry( balance_check);
+				break;
+												
+			case 2:
+						
+				//deposit money
+				balance_check= deposit(balance_check, input);
+				break;
+						
+			case 3:
+				//withdraw money
+				balance_check= withdraw(balance_check, input);
+				break;
+
+			case 4:
+				System.out.println("\nGoodbye");
+				break;
+			}//switch				
+		}while(feature_action!=4);
+		
+	}//main
+	
+	
+	//methods 
+
+	
+	//Choice for sub-features 
+	public static int feature_choice_meth(Scanner input) {
+		System.out.println("1. View your Balance");
+		System.out.println("2. Deposit Cash");
+		System.out.println("3. Withdraw Cash");
+		System.out.println("4. Exit");
+		System.out.print( "\nEnter Your Selection: ");
+		int user_feature_choice= input.nextInt();
+		return user_feature_choice;
+	}//sub-features
+	
+	//balance inquiry
+	public static void balance_inquiry(double balance) {
+		System.out.print("\nYour current balance is ");
+		System.out.printf("%.2f", balance);
+		System.out.println("");
+	}//balance
+	
+	
+	//deposit money
+	public static double deposit(double balance, Scanner input) {
+		//loop to ensure a non-negative input
+		double deposit_result;
+		while (true) {
+			System.out.print("Enter amount you want to deposit: ");
+			double dep= input.nextDouble();
+			if (dep>=0) {
+				deposit_result= balance + dep;
+				return deposit_result;
+			}
+			else {
+				System.out.println("Enter a non-negative value ");
+			}
+		}
+		
+	}//deposit
+	
+	//withdraw money
+	public static double withdraw(double balance, Scanner input) {
+		//loop to ensure a withdraw is not greater than the balance
+		double withdraw_result;
+			System.out.print("Enter amount you want to withdraw: ");
+			double with= input.nextDouble();
+			if (with <=balance) {
+				withdraw_result= balance - with;
+				return withdraw_result;
+			}
+			else {
+				System.out.println("Sorry. You don't have enough balance!");
+				return 0;
+			}
+		
+	}//deposit
+
+
+}//class
