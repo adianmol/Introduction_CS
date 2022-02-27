@@ -1,0 +1,29 @@
+//Java Code
+import java.util.Scanner;
+public class Exercise3 {
+
+	public static void main(String[] args) {
+		//area of a circle 
+		Scanner input= new Scanner(System.in);
+		//user input of the area
+		System.out.print("Enter the radius of the circle: ");
+		double radius  = input.nextDouble();
+		//calling the method
+		double area= area_c(radius);
+		
+		//displaying the result
+		System.out.print("The area of a circle of radius "+ radius+ " is ");
+		System.out.printf("%.2f", area);
+		input.close();
+	}//main
+
+	//method to find the area of the circle 
+	public static Double area_c(double r) {
+		double result; 
+		result = (r*r*Math.PI);
+		return result;
+		
+	}//area
+	
+}//class
+
