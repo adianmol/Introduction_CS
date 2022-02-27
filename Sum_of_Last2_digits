@@ -1,0 +1,31 @@
+// JAVA Code 
+import java.util.Scanner;
+public class Exercise2 {
+
+	public static void main(String[] args) {
+		// last digit of the sum of two numbers
+		
+		//get user input for the two numbers 
+		Scanner input = new Scanner(System.in);
+		System.out.print("Enter the first number: ");
+		int num1= input.nextInt();
+		System.out.print("Enter the second number: ");
+		int num2= input.nextInt();
+		
+		//call the method
+		int ld= lastdigit(num1, num2);
+		
+		//display the result 
+		System.out.println("The last digit of the sum of "+ num1 + " and " + num2 + " is " + ld);
+		input.close();
+		
+
+	}// main
+	
+	//create a method 
+	public static int lastdigit(int n1, int n2) {
+		//add the two and to get the ones digit find the remainder of the sum 
+		int result =(n1 + n2)%10;
+		return result;
+	}//lastdigit
+}//class
