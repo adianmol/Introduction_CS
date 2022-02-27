@@ -1,0 +1,29 @@
+//Java Code
+import java.util.Scanner;
+public class Exercise7 {
+
+	public static void main(String[] args) {
+		// to test the functionality of the method i ask the user for inputs
+		
+		Scanner input = new Scanner(System.in);
+		System.out.print("Enter lower limit of the range: ");
+		int a= input.nextInt();
+		System.out.print("Enter lower limit of the range: ");
+		int b= input.nextInt();
+		//Call the method 
+		int result= random(a,b);
+		
+		//display the result 
+		System.out.println("The pseudo-random integer is " +result);
+		input.close();
+	}//main
+	
+	// method to generate a random integer in a range
+	public static int random(int a, int b) {
+		int r;
+		//using the math library to generate a random number between 0 and 1 and then adjusting it to fit in the a to b range
+		r = a +(int)(Math.random()*(b));
+		return r;
+	}//method 
+
+}//class
