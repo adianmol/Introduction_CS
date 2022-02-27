@@ -1,0 +1,407 @@
+//Java 
+//Main Class
+import java.util.Scanner;
+public class CarManagement {
+
+	public static void main(String[] args) {
+	
+		Scanner input= new Scanner(System.in);
+		
+		
+		//Empty array of 'Car's
+		Car[] inventory= new Car[10];
+		//instantiating the array
+		for (int i=0; i<10; i++) {
+			inventory[i]= new Car();
+		}
+		
+		System.out.println("Welcome to Aditya's Car Dealership Management System !\n");
+		String option;
+		
+		//Loop to keep the client in the system unless asked to exit
+		while(true) {
+			
+			//user input to choose from menu
+			menu();
+			option= input.next();
+			input.nextLine();   //  to resolve an issue with Scanner
+			
+			if(option.equalsIgnoreCase("A")) {
+				//Adding
+				add_car(inventory,input);
+			}
+			else if (option.equalsIgnoreCase("B")) {
+				//Searching 
+				//user input for the car to search for 
+				System.out.println("Enter the car brand name that you want to search in our inventory: ");
+				String user_car= input.nextLine();
+				//calling the method for price search 
+				double price_searched= search_car(inventory,user_car, input);
+				if(price_searched<0) {
+					System.out.println("This inventory does not have the car brand that you are looking for.\n");
+				}
+				else {
+					System.out.println("The cost of "+ user_car+ " is " + price_searched + " dollars.");
+				}
+			}
+			else if (option.equalsIgnoreCase("C")) {
+				//Deleting 
+				delete_car(inventory, input);
+				
+			}
+			else if (option.equalsIgnoreCase("D")) {
+				//Below price display
+				
+				Car[] bp_array= below_price(inventory,  input);
+				
+				System.out.println("Displaying the brands names and their respective prices for cars worth less than the user input price-level.");
+				//display the car brands and the prices that are below the user-fed price level
+				int check_bp=0;
+				for (int j=0; j<bp_array.length; j++) {
+					if(!bp_array[j].getBrand().equalsIgnoreCase("")) {
+						bp_array[j].printCar();
+						check_bp++;
+					}
+				}
+				if (check_bp==0) {
+					System.out.println("There are no cars under the asked price level.");
+				}
+				
+			}
+			else if (option.equalsIgnoreCase("E")) {
+				//Edit cars 
+				//user input on which car to change 
+				System.out.println("Enter the Car's brand name that you want the change: ");
+				String from_change= input.nextLine();
+				
+				//user input on new brand name 
+				System.out.println("Enter the new Car's brand name you want to change to:  ");
+				String to_change= input.nextLine();
+				int result_edit= edit_car(inventory, from_change, to_change);
+				if (result_edit==0) {
+					System.out.println(from_change+ " is not a part of this inventory.");
+				}
+				else {
+					System.out.println("The Car's name has been changed from "+ from_change +" to "+ to_change + ".");
+				}
+				
+			}
+			
+			else if (op/tion.equalsIgnoreCase("F")) {
+				//Sort by price
+				sort_by_price(inventory);
+				
+				//Verification structure to see the array
+				for(int i =0; i<inventory.length;i++) {
+					System.out.println("Checking - "+ inventory[i].getBrand());
+				}
+				//check
+				int print_index=0;
+				//display the inventory
+				System.out.println("The sorted inventory is: ");
+				for (int l=0; l<inventory.length; l++) {
+					if(!inventory[l].getBrand().equalsIgnoreCase("")) {
+						inventory[l].printCar();
+						print_index++;
+					}
+					
+				}
+				if (print_index==0) {
+					System.out.println("Not Available as the inventory is empty.\n");
+				}
+				
+			}
+			
+			else if (option.equalsIgnoreCase("G")) {
+				
+				//Average of prices
+				double avg= average_price(inventory);
+				if (avg ==0) {
+					System.out.println("There are no cars in the inventory.");
+				}
+				else {
+					System.out.print("The average price of the cars in this inventory is ");
+					System.out.printf("%.2f", avg);
+					System.out.println(" dollars.");
+				}
+				
+			}
+			
+			else if (option.equalsIgnoreCase("H")) {
+				//quit
+				System.out.println("Thank you for visiting. I hope you have a a good day!");
+				break;
+			}
+			else {
+				System.out.println("Enter a valid choice, please. ");
+			}
+			
+		}//while
+		
+		input.close();
+		
+	}//main
+	
+	//Methods:
+	
+	//option list 
+	public static void menu() {
+		
+		System.out.println("A: Add a car to the inventory\n" + 
+				"B: Search for a car (by car’s brand name)\n" + 
+				"C: Delete a car (by car’s brand name)\n" + 
+				"D: Display all cars below a certain price (the price is given by the user)\n" + 
+				"E: Edit a cars’ (the car name is an input)\n" + 
+				"F: Sort the cars by price and display them\n" + 
+				"G: Calculate and display the average price of cars\n" + 
+				"H: Quit");
+		System.out.println("Enter your choice: ");
+	
+	}//menu
+	
+	//Add car to the inventory 
+	public static void add_car(Car[] inv, Scanner input) {
+		
+		//ask for car details 
+		System.out.println("Enter the car's brand name: ");
+		String b =input.nextLine();
+		double p= price_car(input);
+		//find an empty array and add value 
+		int add_possible=0;
+		for (int i=0; i <inv.length; i++) {
+			if (inv[i].getBrand().equalsIgnoreCase("")) {
+				inv[i].setBrand(b);
+				inv[i].setPrice(p);
+				System.out.println("Entry added!\n");
+				add_possible=1;
+				break;
+			}//if 		
+		}//for
+		if (add_possible!=1) {
+			System.out.println("Inventory is full. Try again later.\n");
+		}//if
+		
+	}//add
+	
+	//method to get a valid price
+	public static double price_car(Scanner input) {
+		
+		System.out.println("Enter the car's price: ");
+		double p = input.nextDouble();
+		while (p<0) {
+			System.out.println("Enter a Non-Negative Price Value.");
+			p = input.nextDouble();
+		}
+		return p;
+		
+	}//valid price input
+	
+	//Search for car by brand name 
+	public static double search_car(Car[] inv,String user_car, Scanner input ) {
+		
+		double price_searched=(-1);
+		//iterating over the array and searching the brand names to find the user input value
+		for (int i=0; i<inv.length; i++) {
+			if (inv[i].getBrand().equalsIgnoreCase(user_car)) {
+				price_searched= inv[i].getPrice();
+				break;
+			}//if
+		}//for
+		return price_searched;
+		
+	}//search 
+	
+	//delete a car 
+	public static void delete_car(Car[] inv, Scanner input) {
+		
+		//index values
+		int index_del=(-1);
+		
+		//user input to get which car to delete
+		System.out.println("Enter the car brand name that you want to delete: ");
+		String del=input.next();
+		//search and change values 
+		for (int i=0; i<inv.length; i++) {
+			if (inv[i].getBrand().equalsIgnoreCase(del)) {
+				index_del=i;
+				inv[i].setBrand("");
+				inv[i].setPrice(0);
+				break;
+			}
+		}//for
+		
+		if (index_del<0) {
+			System.out.println("This inventory does not have "+ del+ ". ");
+		}
+		else {
+			//since we deleted the entry, we have to shift the rest of the others one left/up
+			for (int j =(index_del); j<(inv.length-1); j++) {
+				inv[j]=inv[j+1];
+			}//for 
+			System.out.println(del + " is deleted from the inventory.");
+		}
+		
+		
+	}//delete
+	
+	//Display all cares below a certain price range 
+		//return an array of cars below  a price 
+	
+	public static Car[] below_price(Car[] inv, Scanner input) {
+		
+		//user input on price value
+		double price_bp= price_car(input);
+		Car[] new_array_bp= new Car[10];
+		
+		 
+		for(int j=0; j<new_array_bp.length; j++) {
+		 	new_array_bp[j]= new Car();
+		}//for
+		for(int i =0; i< inv.length; i++) {
+			if (inv[i].getPrice()<price_bp) {
+				
+				new_array_bp[i]=inv[i];
+				//new_array_bp[i].setBrand(inv[i].getBrand()); 
+				//new_array_bp[i].setPrice(inv[i].getPrice());
+				//could have done this to create a completely new array but that would be inefficient as it would take up extra 
+				//storage space
+			}
+			else {
+				new_array_bp[i]= new Car();
+				//just in case the index location was object was not initialized to Car()
+			}
+		}
+		return new_array_bp;
+		
+	}//below price
+
+	//Edit a car 
+	public static int edit_car(Car[] inv,String from, String to) {
+		
+		int result_edit=0;
+		//search for the car; if found then change the name
+		for (int j=0; j<inv.length; j++) {
+			if (inv[j].getBrand().equalsIgnoreCase(from)) {
+				inv[j].setBrand(to);
+				result_edit=1;
+				break;
+			}
+		}
+		return result_edit;
+		
+	}//edit
+	
+	//Sort the cars by price and print 
+	
+	
+	public static void sort_by_price(Car[] inv) {
+		Car currentMin= new Car();
+		//sorting concept 
+		for(int i =0; i<(inv.length-1);i++ ) {
+			
+			currentMin.setBrand(inv[i].getBrand());
+			currentMin.setPrice(inv[i].getPrice());		
+			
+			int currentMinIndex= i;
+			
+			for(int j=(i+1); j<inv.length;j++) {
+
+				if (currentMin.getPrice() > inv[j].getPrice()) {
+					
+					currentMin.setPrice(inv[j].getPrice());
+					currentMin.setBrand(inv[j].getBrand());
+					currentMinIndex=j;
+					
+				}
+				
+			}//for iterating over the individual prices to update the new min
+			
+		
+			//swapping objects to sort whenever necessary
+			if(currentMinIndex!= i) {
+				//swapping properties
+				//changing properties of the index where the minimum should be
+				inv[currentMinIndex].setBrand(inv[i].getBrand());
+				inv[currentMinIndex].setPrice(inv[i].getPrice());
+				
+				//changing properties index where minimum was
+				inv[i].setBrand(currentMin.getBrand());
+				inv[i].setPrice(currentMin.getPrice());
+				}
+	
+		}//iterating over the inventory array
+		
+	}//sort	
+	
+	//calculate the average 
+	public static double average_price(Car[] inv) {
+		double avg=0;
+		//calculate the total price
+		//calculate the number of cars in the array
+		double total=0;
+		int num_cars=0;
+		for (int j=0; j<inv.length;j++) {
+			if(!inv[j].getBrand().equalsIgnoreCase("")) {
+				total+= inv[j].getPrice();
+				num_cars++;
+			}
+		}//for
+		if(total==0) {
+			return 0;
+		}
+		else {
+			avg =(double)(total/num_cars);
+			return avg;
+		}
+	}//average
+
+	//ASSUMPTIONS:
+	// - Unique Names 
+}//class
+
+// -------------------------------------------------------------------------------------------------------------------------------
+
+//CAR OBJECT 
+// Class Car
+public class Car {
+	//I create a car class to have a blueprint of what behavior would an object in this class would show
+	
+	//member variables
+	private String brand;
+	private double price;
+	
+	//constructors --> to create objects in the main
+	public Car() {
+		brand="";
+		price=0;
+	}
+	public Car(String b) {
+		brand=b;
+	}	
+	public Car(double p) {
+		price=p;
+	}
+	public Car(String b, double p) {
+		brand=b;
+		price=p;
+	}
+	
+	//Getters and Setters 
+	public String getBrand() {
+		return brand;
+	}
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	
+	//print 
+	public void printCar() {
+		System.out.println("Brand name: "+ brand+ " , Price is: "+ price);
+	}
+}
