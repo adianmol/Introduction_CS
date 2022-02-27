@@ -1,0 +1,658 @@
+import java.util.Scanner;
+public class ProductApplication {
+
+	public static void main(String[] args) {
+		System.out.println("Welcome to the Inventory of Products!");
+		
+		Scanner input = new Scanner(System.in);
+		Inventory products=new Inventory();
+		int size =6;
+		
+		int user_input;
+		do {
+			info();
+			System.out.println("Choose an option: ");
+			user_input=input.nextInt();
+			input.nextLine();	//discard new line to avoid problems
+			
+			//cases 
+			switch(user_input) {
+			case 1:
+				//add Product 
+				AddProduct(products, input);
+				break;
+				
+			case 2:
+				//delete product
+				DeleteProduct(products, input);
+				break;
+				
+			case 3:
+				//display all 
+				products.displayAllProducts();
+				break;
+				
+			case 4:
+				//sell
+				SellProduct(products, input);
+				break;
+				
+			case 5:
+				//min price product 
+				products.displayMin();
+				break;
+				
+			case 6:
+				//Products below quantity
+				WriteProdBelowQ(products, input);
+				break;
+				
+			case 7:
+				//merge sort
+				MergeSortMain(products, size);
+				break;
+				
+			case 8:
+				
+				System.out.println("Enter the sum x: ");
+				float x = input.nextFloat();
+				int p =0;
+				int[] available= new int[1];
+				Product[] selected = new Product[(size/2)];
+				for(int i =0; i<(size/2); i++) {
+					selected[i]= new Product();
+				}
+				int j;
+				j= size-1;// i do this as I assume the size of the products inventory to be 6 
+				products.sumofthree(x, p, j, selected, available);
+				if(available[0]==0) {
+					System.out.println("Such a combination does not exist.");
+				}
+				break;
+				
+			}
+			
+			
+			
+		}while(user_input!=9);
+		System.out.println("Exititng. Have a good day!");
+		
+	}
+	
+	//methods
+	public static void info() {
+		System.out.println("1. Add a Product \n2. Delete a Product \n3. Display All Products  \n4. Sell a Product");
+		System.out.println("5. Display a Product info that has minimum price \n6. List all the products below a given quantity in a text file");
+		System.out.println("7. MergeSort Recursively and Display the result \n8. 3 Products such that their prices sum to a user input \n9. Exit");
+	}
+	
+	public static void AddProduct(Inventory products, Scanner input) {
+		//add product 
+		//new product 
+		//existing product update quantity 
+		//assume that the user enters a unique id
+		System.out.println("Enter the Product ID: ");
+		int u_id = input.nextInt();
+		input.nextLine();	//discard new line to avoid problems
+		
+		//check if exists 
+		boolean exist= products.exists(u_id);
+		if (exist) {
+			//user input id and quantity 
+			//assuming the price remains the same for the product. If the price changes then the user will have to delete first and then and the product again.
+			System.out.println("Enter the Product Quantity you want to add to the existing inventory: ");
+			int uquant = input.nextInt();
+			input.nextLine();	//discard new line to avoid problems
+			System.out.println("For an existing product, we assume the same price. To change price for all the products, delete the product "
+					+ "and add new product as I assume that a unique id can only have a constant price for all its items");
+			products.add(u_id, uquant);
+			
+		}
+		else {
+			if (products.isFull()) {
+				System.out.println("The Inventory is full. Cannot add a new Product.");
+			}
+			else {
+				System.out.println("Enter the Product Price: ");
+				float price = input.nextFloat();
+				input.nextLine();	//discard new line to avoid problems 
+				System.out.println("Enter the Product Quantity: ");
+				int uquant = input.nextInt();
+				input.nextLine();	//discard new line to avoid problems	
+				products.add(u_id, price, uquant);
+			}//else
+		}//else
+		
+	}//AddProduct
+	
+	public static void DeleteProduct(Inventory products, Scanner input) {
+		//get user id 
+		System.out.println("Enter the Product ID for the product you want to delete: ");
+		int u_id = input.nextInt();
+		input.nextLine();	//discard new line to avoid problems	
+		products.delete(u_id);
+	}//delete
+	
+	public static void SellProduct(Inventory products, Scanner input) {
+		System.out.println("Enter the Product ID: ");
+		int u_id = input.nextInt();
+		input.nextLine();	//discard new line to avoid problems
+		System.out.println("Enter the quantity of the product you want to sell: ");
+		int uquant = input.nextInt();
+		input.nextLine();	//discard new line to avoid problems
+		
+		products.sell(u_id, uquant);
+	}//sell
+	
+	public static void WriteProdBelowQ(Inventory products, Scanner input){
+		System.out.println("Enter the level of quantity: ");
+		int d_quant= input.nextInt();
+		input.nextLine();	//discard new line to avoid problems
+		
+		products.list_belowquant(d_quant);
+	}
+	
+	public static void MergeSortMain(Inventory products, int size) {
+		if (size>=0) {
+		products.MergeSort_Collect(size);
+		}
+	}
+
+}
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+//PRODUCT OBJECT 
+
+public class Product {
+	//member variables 
+	private int ID;
+	private float price;
+	private int quantity;
+	 
+	//constructors 
+	public Product() {
+		ID = 0;
+		price = 0;
+		quantity=0;
+	}
+	
+	public Product(int id,  float price, int quantity) {
+		this.ID = id;
+		this.price= price;
+		this.quantity = quantity;
+	}
+
+	
+	//getters and setters 
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	//adding a print method as the question asks us to display the details of the product at many occasions
+	public void printProduct() {
+		System.out.print("ID:\t"+ ID+ "\t");
+		System.out.print("Price:\t"+ price+ "\t");
+		System.out.println("Quantity:\t"+ quantity);
+	}
+	
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+//INTERFACE 
+//assumption: "implement an inventory class that allows them to
+// means that there is another inventory class that implements an interface
+// one that I name as InventoryInterface. This interface lays out the methods that the class implementing this must define. 
+public interface InventoryInterface {
+	public abstract void add(int id, float price, int quantity); //add a product to the array
+	public abstract void delete(int id); //delete a product from the array
+	public abstract void displayAllProducts(); //display all the products in the array
+	public abstract void sell(int id, int user_q); //sell a product--> reduce the quantity of a specified product 
+	public abstract void displayMin(); //display all the products with the price same as the minimum price 
+	public abstract void list_belowquant(int d_quant); //create a list of all the product details with quantity below a desired quantity level  
+	public abstract void mergeSort(int[] array, int n); //must sort and display the sorted result 
+	public abstract void sumofthree(float x, int p, int j, Product[] selected, int [] available ); //display the products whose prices sum to be equal to a desired value
+
+}
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.util.Scanner;
+import java.io.*;
+
+public class Inventory implements InventoryInterface{														//
+	//member variables
+	private Product[] products;
+	int numProducts;
+	
+	//constructor
+	public Inventory() {
+		//creates an array of products 
+		products = new Product[6];
+		//as suggested in the question, I choose the number of element in my array to be 6. 
+		//this number can, however, be changed as per as the needs of the client 
+		numProducts=0;
+	}
+	
+	//check if the array is full 
+	public boolean isFull() {
+		return (numProducts>=products.length);
+	}
+	
+
+	
+	//methods 
+	//add a product
+	public void add(int id, float price, int quant) {
+		for (int i =0; i < products.length; i++) {
+			
+			//not initialized
+			if (products[i] == null) {
+				products[i]= new Product(id, price, quant);
+				numProducts++;
+				System.out.println(products[i].getID()+ " is Added! ");
+				break;
+			}
+	
+			//ASSUMPTION: 0 is considered as the default value where the products cannot have the id as 0.								//
+			else if (products[i].getID()==0) {
+				products[i].setID(id);
+				products[i].setPrice(price);
+				products[i].setQuantity(quant);
+				numProducts++;
+				System.out.println(products[i].getPrice()+ " is Added! ");
+				break;
+			}
+			
+		}//for
+		//Interact in the case when one cannot add to the inventory
+		if (isFull()) {
+			System.out.println("Cannot add more now as the inventory maximum capacity is reached.");
+		}
+	}//add
+	
+	//overloading add method for the case that the product already exists and the user want to update the quantity
+	public void add(int id, int quant) {
+		for (int i =0; (i< products.length) && products[i]!= null; i ++ ) {
+			if (products[i].getID()== id ){
+				int new_q= products[i].getQuantity()+quant;
+				products[i].setQuantity(new_q);
+				break;//break as unique id more efficient
+			}
+		}	
+	}//add overloaded
+	
+	
+	
+	//delete a product of unique id 
+	public void delete(int id ) {
+		//search for the value 
+		int index = -1;
+		for (int i =0; (i< products.length) && products[i]!= null; i ++ ) {
+			if (id == products[i].getID()) {
+				index=i;
+				//change the values to default values 
+				products[i].setID(0);
+				products[i].setPrice(0);
+				products[i].setQuantity(0);
+				numProducts--;
+				break;
+			}
+		}//for
+		//when product is not in the inventory
+		if(index<0) {
+			System.out.println("This inventory does not have "+ id+ ". ");
+		}
+		else if(numProducts==0) {
+			System.out.println("This inventory is empty.");
+		}
+		//shift the array 
+		else {
+			for (int j = (index); j < products.length-1; j++) {
+				products[j]= products[j+1];
+				if (products[j+1]!= null&& products[j+1].getID()==0) {
+					products[j+1].setID(0);
+					products[j+1].setPrice(0);
+					products[j+1].setQuantity(0);
+				}
+			}//for
+			//last value 
+			if(products[products.length-1]!= null && products[products.length-1].getID()==0) {
+				products[products.length-1].setID(0);
+				products[products.length-1].setPrice(0);
+				products[products.length-1].setQuantity(0);
+			}
+			System.out.println("Deleted from the inventory.");
+		}//else
+		
+	}
+
+	//display all the products 
+	public void displayAllProducts() {
+		//case when the inventory is empty
+		if (numProducts==0) {
+			System.out.println("The inventory is empty.");
+		}
+		else {
+			for (int i =0;i< products.length && products[i]!= null ;i++) {
+				products[i].printProduct();
+			}
+		}
+	}
+	
+	//sell a product--> reduce the quantity of a specified product
+	public void sell(int id, int user_q) {
+		//search for  desired product 
+		int index = -1;
+		for (int i =0; (i< products.length) && products[i]!= null; i ++ ) {
+			//found
+			if (id == products[i].getID()) {
+				index=i;
+				if (products[i].getQuantity()==0) {
+					System.out.println(id +" is out of stock at the moment.");
+					break;
+				}
+				else if (products[i].getQuantity()<user_q) {
+					System.out.println("Sorry, there is not enough products of id " +id+ " in the inventory. If you want the available quantity, next time enter "
+				+products[i].getQuantity());
+					break;
+				}
+				else {
+					int diff = products[i].getQuantity() -user_q;
+					System.out.println("Product "+ id+ " sold.");
+					products[i].setQuantity(diff);
+					break;
+				}
+			}
+		}//for
+		
+		//if not available
+		if (index<0) {
+			System.out.println(id + " is not available in the inventory");
+		}
+		else if(numProducts==0) {
+			System.out.println("This inventory is empty.");
+		}
+		
+	}//sell
+	
+	//display all the products with the price same as the minimum price
+	public void displayMin() {
+		//find the minimum price 
+		//check if array is empty
+		if (numProducts==0) {
+			System.out.println("This inventory is empty. As a result, there is no minimum price.");
+		}
+		else {
+			
+			//if array not empty--> minimum price 
+			float minprice= products[0].getPrice();
+			for (int i =0; (i< products.length) && products[i]!= null; i ++ ) {
+				if (products[i].getPrice()< minprice) {
+					minprice = products[i].getPrice();
+				}
+			}//for
+			
+			//identify the products with minimum price and print 
+			for (int i =0; (i< products.length) && products[i]!= null; i ++ ) {
+				if (products[i].getPrice()== minprice) {
+					products[i].printProduct();
+				}
+			}
+			
+		}//else	
+	}  
+	
+	
+	//create a list of all the product details with prices below a desired price
+	public void list_belowquant(int d_quant) {
+		int write_in_file =-1;
+		int num_bq=0;
+		
+		//find the number of products below that quantity 
+		for (int i =0; (i< products.length) && products[i]!= null; i ++ ) {
+			if (products[i].getQuantity()< d_quant) {
+				num_bq++;
+			}
+		}
+		
+		Product [ ] new_array_bq= new Product[num_bq];
+		//loop to insert the products in the new array where all of their prices are below the desired price 
+		for (int i =0; (i< products.length) && products[i]!= null; i ++ ) {
+			if (products[i].getQuantity()< d_quant) {
+				new_array_bq[i]=products[i];
+				
+				/* could also have done this but it would have been inefficient
+				 * new_array_bp[i].setID(products[i].getID());
+				 * new_array_bp[i].setPrice(products[i].getPrice());
+				 * new_array_bp[i].setQuantity(products[i].getQuantity());;
+				 */
+				
+			}//if
+		}//for
+		
+		
+		//check for empty array and no products 
+		if (numProducts==0) {
+			write_in_file =-1;
+		}
+	
+		//write the list in a another file 
+		
+		//name of file 
+		String filename = "src/p.txt"; 
+		
+		try {
+			FileWriter filewriter = new FileWriter (filename);
+			
+			BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
+			bufferedwriter.write("The list of products and their details below " + d_quant +" are: ");
+			bufferedwriter.newLine();
+			//loop to write the list in the text file
+			int id_bq;
+			//float price_bq;
+			for (int i =0; i < new_array_bq.length;i++) {
+				
+				id_bq = new_array_bq[i].getID();
+				//System.out.println(id_bq);
+				bufferedwriter.write("Product ID: "+id_bq );
+				bufferedwriter.newLine();
+			}//for 
+			
+			//if (write_in_file<0) {
+			//	bufferedwriter.write("Sorry there are no produces in the inventory below the user desired quantity.");
+			//}
+			bufferedwriter.close();
+		}
+		
+		catch(IOException ex){
+			System.out.println("Error writing in this file.");
+		}
+		
+		//no element in the array 
+		//array print in another file 
+		
+		
+	}
+	public boolean exists(int uid) {
+		for (int i =0; (i< products.length) && products[i]!= null; i ++ ) {
+			if (products[i].getID()== uid ){
+				return true;
+			}
+		}	
+		return false;
+		
+		
+	}//exist 
+	
+	//merge sort recursively
+	public void MergeSort_Collect( int n) {
+		  int[] q = new int[n];
+		  int k = 0;
+		  //empty check
+		  if (products.length>0 &&  products[0]!= null) {
+		  for (int i = 0; i < products.length; i++) {
+			  if (products[i].getQuantity() != -1) {
+				  q[k] = products[i].getQuantity();
+				  k++;
+		    // System.out.println(p[i].getQuantity());
+			  }//if
+		  }
+		  mergeSort(q, q.length);//call the mergeSort function to do mergesort method 
+		  int t = 0;
+		  System.out.println("Products are orderd based on Ascending Quantity:");
+		  for (int j = 0; j < q.length; j++) {
+			  for (int w = 0; w < products.length; w++) {
+				  if (products[w].getQuantity() == q[j]) {
+					  t += 1;
+					  System.out.println(t + ". Product ID: " + products[w].getID() + " Product Price: " + products[w].getPrice()
+							  + " Product Quantity :" + products[w].getQuantity());
+				  }//if
+			  }//for
+		  }//for
+		  }//if in case for empty product inventory
+		  else {
+			  System.out.println("Inventory is empty.");
+		  }
+
+		 }// MergeSort_Collect
+
+	public void mergeSort(int[] array, int n) {
+		//array will be the array with all the quantity of existed products
+		//n will be the length of the array 
+		int mid = (n) / 2;
+		int[] X = new int[mid];
+		int[] Y = new int[n - mid];
+		if (n <= 1) {
+				 return;
+		}
+		for (int i = 0; i < mid; i++) {
+				 X[i] = array[i];
+			 }
+			 for (int i = 0; i < n - mid; i++) {
+				 Y[i] = array[i + mid];
+			 }
+			 // System.out.print(mid);
+			// first part
+			 mergeSort(X, mid);
+			// second_half
+			 mergeSort(Y, n - mid);
+			 merge(array, X, Y, 0, mid, mid, n - mid);
+		 }//mergeSort
+
+	public void merge(int[] arr, int[] X, int[] Y, int left1, int right1, int left2, int right2) {
+		 int i1 = left1;
+		 int i2 = left2 - right1;
+		 int i = 0;
+		 while (i1 < right1 && i2 < right2) {
+			if (X[i1] <= Y[i2]) {
+				arr[i] = X[i1];
+				i1 += 1;
+			    i += 1;
+			} 
+			else {
+				arr[i] = Y[i2];
+				 i2 += 1;
+				 i += 1;
+			 }//else
+		 }//while
+		if (i1 < right1) {
+			while (i1 < right1) {
+				arr[i] = X[i1];
+				i1 += 1;
+				i += 1;
+			}//while
+		}
+		if (i2 < right2) {
+			while (i2 < right2) {
+					arr[i] = Y[i2];
+					i2 += 1;
+				 i += 1;
+				}//while
+		 }//if
+	 }//merge
+
+	
+	//display the products whose prices sum to be equal to a desired value
+	public void sumofthree(float x, int p, int j, Product[] selected, int [] available ) {
+		
+		//when we have selected and we cannot get x ==0
+		//if (p==3 && x!=0) {
+		//}
+		//selected 3 and made the required sum 
+		//empty check
+		if (products.length>0 &&  products[0]!= null) {
+			
+			
+		
+		if(p==3 && x==0) {
+			//print these are the selected ones 
+			for(int l =0; l<3; l++) {
+				selected[l].printProduct();
+			}
+			
+			//if only one we return the array --> return store and then print in product applications 
+			System.out.println("____________________Possible Combination____________________________");
+			available[0]++;
+			
+			
+		}
+		else if(p<3 && x>0 && j>=0) {
+			//select the current 
+			Product[] selected1 = new Product[3];
+			for(int i =0; i<3; i++) {
+				selected1[i]= new Product();
+			}
+			for (int l = 0; l<p; l++) {
+				selected1[l].setID(selected[l].getID());
+				selected1[l].setPrice(selected[l].getPrice());
+				selected1[l].setQuantity(selected[l].getQuantity());
+			}
+			//ASSUMPTION: 0 is considered as the default value where the products cannot have the id as 0.								//
+			//selected1[p].getID()==0
+			if (true) {
+				selected1[p].setID(products[j].getID());
+				selected1[p].setPrice(products[j].getPrice());
+				selected1[p].setQuantity(products[j].getQuantity());
+			}
+	
+			sumofthree(x-products[j].getPrice(), p+1, j-1, selected1,available );
+			
+			//or skip 
+			Product[] selected2 = new Product[3];
+			for(int i =0; i<3; i++) {
+				selected2[i]= new Product();
+			}
+			for (int l = 0; l<3; l++) {
+				selected2[l].setID(selected[l].getID());
+				selected2[l].setPrice(selected[l].getPrice());
+				selected2[l].setQuantity(selected[l].getQuantity());
+			}
+			sumofthree(x, p, j-1, selected2, available);
+		}//else
+		}//if
+		else {
+			System.out.println("Empty Inventory");
+		}
+	}//sum of three
+
+	
+}// end
