@@ -1,0 +1,47 @@
+import java.util.Scanner;
+public class Exercise9 {
+
+	public static void main(String[] args) {
+		//palindrome check 
+		Scanner input = new Scanner(System.in);
+		//user input
+		System.out.print (" Enter a String to check for palindrome: ");
+		String s= input.nextLine();
+		//calling the function and displaying the result 
+		if (pali(s)) {
+			System.out.println(s +" is a palindrome." );
+		}
+		else {
+			System.out.println(s + " is not a palindrome");
+		}
+		System.out.println("Thank you for using the Palindrome Identifier");
+		input.close();
+	}//main
+	
+	//method to check for palindrome
+	public static boolean pali(String s) {
+		//convert the string to lower case for comparing characters
+		s=s.toLowerCase();
+		// create a new string with no spaces 
+		String s2="";
+		
+		for (int j=0; j< s.length(); j++) {
+			if (s.charAt(j)!= ' ') {
+				s2+= s.charAt(j);
+			}
+		}//for
+		
+	
+		int l = s2.length();
+		
+		//loop to check if the corresponding characters at each index is the same as the other. 
+		for (int i =0; i<l; i++) {
+			//if not same return false
+			if (s2.charAt(i)!=s2.charAt(l-1-i)) {
+				return false;
+			}
+		}//for
+		return true;
+	}//method
+
+}
